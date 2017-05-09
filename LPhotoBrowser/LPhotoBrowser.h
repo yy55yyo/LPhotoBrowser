@@ -20,5 +20,5 @@
                photoModelBlock:(NSArray *(^)())photoModelBlock;
 
 - (void)isLastAndRemoveImageOfIndex:(NSInteger)index;
-
+- (void)dismiss;
 @end
