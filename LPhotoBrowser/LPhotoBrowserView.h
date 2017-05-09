@@ -16,8 +16,14 @@
 @property(nonatomic,readonly)NSInteger currentPage;
 @property(nonatomic,readonly)UIImage *currentImage;//当前image
 
+@property (nonatomic,copy)void(^ bottomButtonTapBlock)(NSInteger buttonIndex);//底部按钮点击回调
 @property (nonatomic,copy)void(^ singleTapBlock)(NSInteger tapIndex);//点击回调
 @property (nonatomic,copy)void(^ changePageBlock)(NSInteger sumPage,NSInteger currentPage);//页面切换
+
+-(instancetype)initWithFrame:(CGRect)frame
+               withImagesArr:(NSArray *)imageArray
+                    initPage:(int)initPage
+           bottomButtonIcons:(NSArray *)icons;
 
 -(instancetype)initWithFrame:(CGRect)frame
                withImagesArr:(NSArray *)imageArray

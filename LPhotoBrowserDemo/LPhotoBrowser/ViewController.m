@@ -201,8 +201,41 @@
     NSInteger initPage = index;
     
      @WeakObj(self);
-    [LPhotoBrowser showWithViewController:self initIndex:initPage photoModelBlock:^NSArray *{
-        
+//    [LPhotoBrowser showWithViewController:self initIndex:initPage photoModelBlock:^NSArray *{
+//        
+//        NSMutableArray *temp = [NSMutableArray arrayWithCapacity:7];
+//        
+//        for (int i = 0; i < Weakself.imagesArray.count; i ++) {
+//            
+//            UITableViewCell *cell = [_table cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+//            UIImageView *imageView = nil;
+//            
+//            LPhotoModel *photo = [[LPhotoModel alloc]init];
+//
+//            //本地
+//            if (location == Location_left) {
+//                NSString *name = [NSString stringWithFormat:@"%d.jpg",i + 1];
+//                photo.image = [UIImage imageNamed:name];
+//                imageView = [cell.contentView viewWithTag:100];
+//                photo.thumbImage = self.imagesArray[i];
+//
+//            }
+//            //网络
+//            else if (location == Location_right){
+//                photo.imageUrl = Weakself.imagesUrlArray[i];
+//                imageView = [cell.contentView viewWithTag:101];
+//                photo.thumbImage = imageView.image;
+//            }
+//            photo.sourceImageView = imageView;
+//            [temp addObject:photo];
+//        }
+//        
+//        return temp;
+//    }];
+    
+    [LPhotoBrowser showWithViewController:self initIndex:initPage bottomButtonIcons:@[@"btn_photo_delete",@"btn_photo_delete"] bottomButtonClickBlock:^(NSInteger buttonIndex, NSInteger imageIndex) {
+        NSLog(@"%zd===%zd",buttonIndex,imageIndex);
+    } photoModelBlock:^NSArray *{
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:7];
         
         for (int i = 0; i < Weakself.imagesArray.count; i ++) {
@@ -211,14 +244,14 @@
             UIImageView *imageView = nil;
             
             LPhotoModel *photo = [[LPhotoModel alloc]init];
-
+            
             //本地
             if (location == Location_left) {
                 NSString *name = [NSString stringWithFormat:@"%d.jpg",i + 1];
                 photo.image = [UIImage imageNamed:name];
                 imageView = [cell.contentView viewWithTag:100];
                 photo.thumbImage = self.imagesArray[i];
-
+                
             }
             //网络
             else if (location == Location_right){

@@ -15,6 +15,12 @@
 #define kNextTag 1001
 #define kLastTag 1002
 
+#define kBaseTagOfButton 2000
+#define kWidthOfBottomButton 54
+#define kHeightOfBottomButton 31
+#define kSpaceOfBottomButton 20
+#define kSpaceBottomOfBottomButton 10
+
 @interface LPhotoBrowserView ()
 {
     NSInteger _pageIndex;
@@ -64,6 +70,35 @@
         [self setInitPage:initPage];
     }
     return self;
+}
+
+-(instancetype)initWithFrame:(CGRect)frame
+               withImagesArr:(NSArray *)imageArray
+                    initPage:(int)initPage
+           bottomButtonIcons:(NSArray *)icons {
+    if (self = [self initWithFrame:frame withImagesArr:imageArray initPage:initPage]) {
+        for (NSInteger index = 0; index < icons.count; index ++) {
+            NSString *iconStr = icons[index];
+            
+            UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(kSpaceOfBottomButton + index * (kSpaceOfBottomButton + kWidthOfBottomButton), self.frame.size.height - kSpaceBottomOfBottomButton - kHeightOfBottomButton, kWidthOfBottomButton, kHeightOfBottomButton)];
+            button.tag = kBaseTagOfButton + index;
+            button.layer.borderWidth = 1.5;
+            button.layer.borderColor = [UIColor whiteColor].CGColor;
+            button.layer.cornerRadius = 5;
+            
+            [button setImage:[UIImage imageNamed:iconStr] forState:UIControlStateNormal];
+            [button addTarget:self action:@selector(bottomButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+            [self addSubview:button];
+        }
+    }
+    return self;
+}
+
+- (void)bottomButtonClicked:(UIButton *)sender {
+    if (self.bottomButtonTapBlock) {
+        NSInteger tag = sender.tag - kBaseTagOfButton;
+        self.bottomButtonTapBlock(tag);
+    }
 }
 
 

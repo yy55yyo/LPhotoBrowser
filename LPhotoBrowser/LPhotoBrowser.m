@@ -30,9 +30,20 @@
 
 @property (nonatomic,strong)UIView *backgroudView;//背景view
 
+@property (nonatomic, strong) NSArray *bottomIcons;
+@property (nonatomic, copy) void(^bottomButtonClickBlock)(NSInteger buttonIndex, NSInteger imageIndex);
+
 @end
 
 @implementation LPhotoBrowser
+
+- (instancetype)initWithBottomIcons:(NSArray *)icons bottomButtonClicked:(void(^)(NSInteger buttonIndex, NSInteger imageIndex))block {
+    if (self = [super init]) {
+        self.bottomButtonClickBlock = block;
+        self.bottomIcons = icons;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     
@@ -43,9 +54,21 @@
     
     [self.view addSubview:self.backgroudView];
 
-    //每页数据准备
-    self.browserView = [[LPhotoBrowserView alloc]initWithFrame:self.view.bounds withImagesArr:self.photoModels initPage:(int)self.initIndex];
-    [self.view addSubview:_browserView];
+    if (self.bottomIcons.count > 0) {
+        //每页数据准备
+        self.browserView = [[LPhotoBrowserView alloc]initWithFrame:self.view.bounds withImagesArr:self.photoModels initPage:(int)self.initIndex bottomButtonIcons:self.bottomIcons];
+        @WeakObj(self);
+        self.browserView.bottomButtonTapBlock = ^(NSInteger buttonIndex) {
+            if (Weakself.bottomButtonClickBlock) {
+                Weakself.bottomButtonClickBlock(buttonIndex, Weakself.page);
+            }
+        };
+        [self.view addSubview:_browserView];
+    } else {
+        //每页数据准备
+        self.browserView = [[LPhotoBrowserView alloc]initWithFrame:self.view.bounds withImagesArr:self.photoModels initPage:(int)self.initIndex];
+        [self.view addSubview:_browserView];
+    }
     
     
     //长按手势
@@ -157,9 +180,26 @@
 
 + (void)showWithViewController:(UIViewController *)viewController
                      initIndex:(NSUInteger)initIndex
-            isShowActionButton:(BOOL)isShowActionButton
+             bottomButtonIcons:(NSArray *)icons
+        bottomButtonClickBlock:(void(^)(NSInteger buttonIndex, NSInteger imageIndex))block
                photoModelBlock:(NSArray *(^)())photoModelBlock {
     
+    //取出相册数组
+    NSArray *photoModels = photoModelBlock();
+    
+    if(photoModels == nil || photoModels.count == 0) return;
+    
+    LPhotoBrowser *pbVC = [[self alloc] initWithBottomIcons:icons bottomButtonClicked:block];
+    
+    if(initIndex >= photoModels.count){
+        NSLog(@"erro:index越界！");
+        return;
+    }
+    pbVC.handleVC = viewController;
+    pbVC.photoModels = photoModels;
+    pbVC.initIndex = initIndex;
+    //展示
+    [pbVC show:YES];
 }
 
 #pragma mark - getter

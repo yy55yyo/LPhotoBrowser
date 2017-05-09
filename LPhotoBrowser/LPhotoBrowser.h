@@ -15,7 +15,8 @@
 
 + (void)showWithViewController:(UIViewController *)viewController
                      initIndex:(NSUInteger)initIndex
-            isShowActionButton:(BOOL)isShowActionButton
+             bottomButtonIcons:(NSArray *)icons
+        bottomButtonClickBlock:(void(^)(NSInteger buttonIndex, NSInteger imageIndex))block
                photoModelBlock:(NSArray *(^)())photoModelBlock;
 
 @end
