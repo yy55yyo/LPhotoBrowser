@@ -115,12 +115,12 @@
     if (imageArr.count == 0) {
         return YES;
     } else {
-        [self realodContentView];
+        [self relaodContentView];
         return NO;
     }
 }
 
-- (void)realodContentView {
+- (void)relaodContentView {
     
     _sumPage = self.imageArr.count;
     
@@ -136,6 +136,8 @@
     [self.imageScroll.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     //初始显示
     [self setInitPage:self.currentPage];
+    //页数更新
+    self.numLabel.text = [NSString stringWithFormat:@"%d / %d",(int)self.currentPage + 1,(int)_sumPage];
 }
 
 #pragma mark - 显示和隐藏
