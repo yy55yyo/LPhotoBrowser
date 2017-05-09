@@ -31,13 +31,13 @@
 @property (nonatomic,strong)UIView *backgroudView;//背景view
 
 @property (nonatomic, strong) NSArray *bottomIcons;
-@property (nonatomic, copy) void(^bottomButtonClickBlock)(NSInteger buttonIndex, NSInteger imageIndex);
+@property (nonatomic, copy) void(^bottomButtonClickBlock)(NSInteger buttonIndex, NSInteger imageIndex, LPhotoBrowser *browser);
 
 @end
 
 @implementation LPhotoBrowser
 
-- (instancetype)initWithBottomIcons:(NSArray *)icons bottomButtonClicked:(void(^)(NSInteger buttonIndex, NSInteger imageIndex))block {
+- (instancetype)initWithBottomIcons:(NSArray *)icons bottomButtonClicked:(void(^)(NSInteger buttonIndex, NSInteger imageIndex, LPhotoBrowser *browser))block {
     if (self = [super init]) {
         self.bottomButtonClickBlock = block;
         self.bottomIcons = icons;
@@ -60,7 +60,7 @@
         @WeakObj(self);
         self.browserView.bottomButtonTapBlock = ^(NSInteger buttonIndex) {
             if (Weakself.bottomButtonClickBlock) {
-                Weakself.bottomButtonClickBlock(buttonIndex, Weakself.page);
+                Weakself.bottomButtonClickBlock(buttonIndex, Weakself.page, Weakself);
             }
         };
         [self.view addSubview:_browserView];
@@ -118,6 +118,12 @@
 #endif
         
         
+    }
+}
+
+- (void)isLastAndRemoveImageOfIndex:(NSInteger)index {
+    if ([self.browserView isLastAndRemoveImageOfIndex:index]) {
+        [self dismiss];
     }
 }
 
@@ -181,7 +187,7 @@
 + (void)showWithViewController:(UIViewController *)viewController
                      initIndex:(NSUInteger)initIndex
              bottomButtonIcons:(NSArray *)icons
-        bottomButtonClickBlock:(void(^)(NSInteger buttonIndex, NSInteger imageIndex))block
+        bottomButtonClickBlock:(void(^)(NSInteger buttonIndex, NSInteger imageIndex, LPhotoBrowser *browser))block
                photoModelBlock:(NSArray *(^)())photoModelBlock {
     
     //取出相册数组

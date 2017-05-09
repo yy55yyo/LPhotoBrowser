@@ -32,6 +32,7 @@
 @property(nonatomic,retain)NSMutableDictionary *viewsDictionary;
 @property(nonatomic,retain)UIView *backgroudView;//背景view
 @property (nonatomic,strong)UILabel *numLabel;//显示页数
+@property(nonatomic,assign)NSInteger currentPage;
 
 @end
 
@@ -101,6 +102,41 @@
     }
 }
 
+- (BOOL)isLastAndRemoveImageOfIndex:(NSInteger)index {
+    NSMutableArray *imageArr = [NSMutableArray arrayWithArray:self.imageArr];
+    
+    if (index >= 0 && index < imageArr.count) {
+        [imageArr removeObjectAtIndex:index];
+        self.imageArr = imageArr;
+    } else {
+        return YES;
+    }
+    
+    if (imageArr.count == 0) {
+        return YES;
+    } else {
+        [self realodContentView];
+        return NO;
+    }
+}
+
+- (void)realodContentView {
+    
+    _sumPage = self.imageArr.count;
+    
+    if (self.currentPage >= _sumPage) {
+        self.currentPage --;
+        if (self.currentPage < 0) {
+            self.currentPage = 0;
+        }
+    }
+    self.imageScroll.contentOffset = CGPointMake(_imageScroll.frame.size.width*self.currentPage, 0);
+    self.imageScroll.contentSize = CGSizeMake(self.frame.size.width * (self.imageArr.count), self.frame.size.height);
+    
+    [self.imageScroll.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    //初始显示
+    [self setInitPage:self.currentPage];
+}
 
 #pragma mark - 显示和隐藏
 

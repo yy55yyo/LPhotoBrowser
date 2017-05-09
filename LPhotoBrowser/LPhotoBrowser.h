@@ -16,7 +16,9 @@
 + (void)showWithViewController:(UIViewController *)viewController
                      initIndex:(NSUInteger)initIndex
              bottomButtonIcons:(NSArray *)icons
-        bottomButtonClickBlock:(void(^)(NSInteger buttonIndex, NSInteger imageIndex))block
+        bottomButtonClickBlock:(void(^)(NSInteger buttonIndex, NSInteger imageIndex, LPhotoBrowser *browser))block
                photoModelBlock:(NSArray *(^)())photoModelBlock;
+
+- (void)isLastAndRemoveImageOfIndex:(NSInteger)index;
 
 @end

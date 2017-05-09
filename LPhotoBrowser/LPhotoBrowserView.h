@@ -29,6 +29,8 @@
                withImagesArr:(NSArray *)imageArray
                     initPage:(int)initPage;//初始化
 
+- (BOOL)isLastAndRemoveImageOfIndex:(NSInteger)index;
+
 /**
  *  关闭相册
  *

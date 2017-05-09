@@ -233,7 +233,8 @@
 //        return temp;
 //    }];
     
-    [LPhotoBrowser showWithViewController:self initIndex:initPage bottomButtonIcons:@[@"btn_photo_delete",@"btn_photo_delete"] bottomButtonClickBlock:^(NSInteger buttonIndex, NSInteger imageIndex) {
+    [LPhotoBrowser showWithViewController:self initIndex:initPage bottomButtonIcons:@[@"btn_photo_delete",@"btn_photo_delete"] bottomButtonClickBlock:^(NSInteger buttonIndex, NSInteger imageIndex,LPhotoBrowser *browser) {
+        [browser isLastAndRemoveImageOfIndex:imageIndex];
         NSLog(@"%zd===%zd",buttonIndex,imageIndex);
     } photoModelBlock:^NSArray *{
         NSMutableArray *temp = [NSMutableArray arrayWithCapacity:7];
