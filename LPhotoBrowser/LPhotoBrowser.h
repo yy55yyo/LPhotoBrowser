@@ -13,4 +13,9 @@
 
 + (void)showWithViewController:(UIViewController *)viewController initIndex:(NSUInteger)initIndex photoModelBlock:(NSArray *(^)())photoModelBlock;
 
++ (void)showWithViewController:(UIViewController *)viewController
+                     initIndex:(NSUInteger)initIndex
+            isShowActionButton:(BOOL)isShowActionButton
+               photoModelBlock:(NSArray *(^)())photoModelBlock;
+
 @end

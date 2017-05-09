@@ -155,6 +155,13 @@
     [pbVC show:YES];
 }
 
++ (void)showWithViewController:(UIViewController *)viewController
+                     initIndex:(NSUInteger)initIndex
+            isShowActionButton:(BOOL)isShowActionButton
+               photoModelBlock:(NSArray *(^)())photoModelBlock {
+    
+}
+
 #pragma mark - getter
 
 /**
