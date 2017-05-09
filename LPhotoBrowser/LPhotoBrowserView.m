@@ -104,20 +104,17 @@
 
 - (BOOL)isLastAndRemoveImageOfIndex:(NSInteger)index {
     NSMutableArray *imageArr = [NSMutableArray arrayWithArray:self.imageArr];
-    
+    if (imageArr.count == 1) {
+        return YES;
+    }
     if (index >= 0 && index < imageArr.count) {
         [imageArr removeObjectAtIndex:index];
         self.imageArr = imageArr;
     } else {
         return YES;
     }
-    
-    if (imageArr.count == 0) {
-        return YES;
-    } else {
-        [self relaodContentView];
-        return NO;
-    }
+    [self relaodContentView];
+    return NO;
 }
 
 - (void)relaodContentView {
