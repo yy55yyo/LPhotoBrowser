@@ -250,6 +250,16 @@
     return  self.browserView.currentPage;
 }
 
+
+/**
+ 获取当前图片
+
+ @return 当前图片
+ */
+- (UIImage *)currentImage {
+    return  self.browserView.currentImage;
+}
+
 #pragma mark - setter
 
 /**

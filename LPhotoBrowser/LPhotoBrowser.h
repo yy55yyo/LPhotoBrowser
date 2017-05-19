@@ -19,6 +19,7 @@
         bottomButtonClickBlock:(void(^)(NSInteger buttonIndex, NSInteger imageIndex, LPhotoBrowser *browser))block
                photoModelBlock:(NSArray *(^)())photoModelBlock;
 
+- (UIImage *)currentImage;
 - (void)isLastAndRemoveImageOfIndex:(NSInteger)index;
 - (void)dismiss;
 @end

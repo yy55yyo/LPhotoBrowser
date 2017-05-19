@@ -15,23 +15,31 @@
 #define kNextTag 1001
 #define kLastTag 1002
 
+//底部按钮
 #define kBaseTagOfButton 2000
-#define kWidthOfBottomButton 54
-#define kHeightOfBottomButton 31
-#define kSpaceOfBottomButton 20
-#define kSpaceBottomOfBottomButton 10
+#define kWidthOfBottomButton 23
+#define kHeightOfBottomButton 23
+#define kSpaceOfBottomButton 30
+#define kSpaceBottomOfBottomButton 30
+
+//页数显示
+#define kSpaceRightOfNumLabel 15
+#define kWidthOfNumLabel 100
+#define kHeightOfNumLabel 15
 
 @interface LPhotoBrowserView ()
 {
     NSInteger _pageIndex;
     NSInteger _itemIndex;
     NSInteger _sumPage;//总页数
+    NSInteger _numOfIcons;
 }
 @property(nonatomic,assign)NSInteger initPage;
 
 @property(nonatomic,retain)NSMutableDictionary *viewsDictionary;
 @property(nonatomic,retain)UIView *backgroudView;//背景view
 @property (nonatomic,strong)UILabel *numLabel;//显示页数
+@property (nonatomic,strong)UIButton *numBtn;//带图标的显示
 @property(nonatomic,assign)NSInteger currentPage;
 
 @end
@@ -65,7 +73,10 @@
         [self addSubview:_imageScroll];
         
         //显示数字
-        [self addSubview:self.numLabel];
+//        [self addSubview:self.numLabel];
+        [self addSubview:self.numBtn];
+        [self.numBtn setTitle:[NSString stringWithFormat:@"  %d / %d",(int)_pageIndex + 1,(int)_sumPage] forState:UIControlStateNormal];
+
         
         //初始显示
         [self setInitPage:initPage];
@@ -78,14 +89,12 @@
                     initPage:(int)initPage
            bottomButtonIcons:(NSArray *)icons {
     if (self = [self initWithFrame:frame withImagesArr:imageArray initPage:initPage]) {
+        _numOfIcons = icons.count;
         for (NSInteger index = 0; index < icons.count; index ++) {
             NSString *iconStr = icons[index];
             
             UIButton *button = [[UIButton alloc]initWithFrame:CGRectMake(kSpaceOfBottomButton + index * (kSpaceOfBottomButton + kWidthOfBottomButton), self.frame.size.height - kSpaceBottomOfBottomButton - kHeightOfBottomButton, kWidthOfBottomButton, kHeightOfBottomButton)];
             button.tag = kBaseTagOfButton + index;
-            button.layer.borderWidth = 1.5;
-            button.layer.borderColor = [UIColor whiteColor].CGColor;
-            button.layer.cornerRadius = 5;
             
             [button setImage:[UIImage imageNamed:iconStr] forState:UIControlStateNormal];
             [button addTarget:self action:@selector(bottomButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -135,6 +144,7 @@
     [self setInitPage:self.currentPage];
     //页数更新
     self.numLabel.text = [NSString stringWithFormat:@"%d / %d",(int)self.currentPage + 1,(int)_sumPage];
+    [self.numBtn setTitle:[NSString stringWithFormat:@"  %d / %d",(int)self.currentPage + 1,(int)_sumPage] forState:UIControlStateNormal];
 }
 
 #pragma mark - 显示和隐藏
@@ -268,6 +278,13 @@
     [UIView animateWithDuration:0.2 animations:^{
 
         weakSelf.backgroudView.alpha = 0.f;
+        //隐藏icon
+        for (NSInteger i = 0; i < _numOfIcons; i ++) {
+            UIButton *iconBtn = [self viewWithTag:kBaseTagOfButton + i];
+            iconBtn.alpha = 0;
+        }
+        //隐藏页数
+        self.numBtn.alpha = 0;
     }];
     
     [UIView animateWithDuration:0.3f animations:^{
@@ -341,6 +358,20 @@
     return _numLabel;
 }
 
+- (UIButton *)numBtn {
+    if (!_numBtn) {
+        _numBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(self.frame) - kWidthOfNumLabel - kSpaceRightOfNumLabel, self.frame.size.height - kSpaceBottomOfBottomButton - kHeightOfNumLabel, kWidthOfNumLabel, kHeightOfNumLabel)];
+        [_numBtn setImage:[UIImage imageNamed:@"icon_photo_little"] forState:UIControlStateNormal];
+//        [_numBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -8, 0, 0)];
+//        [_numBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 8, 0, 0)];
+//        _numBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0);
+        _numBtn.titleLabel.font = [UIFont systemFontOfSize:11];
+        _numBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+        [_numBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    }
+    return _numBtn;
+}
+
 #pragma mark - 事件处理
 
 /**
@@ -374,21 +405,21 @@
     /**
      *  隐藏数字
      */
-    if (show) {
-        
-        _numLabel.alpha = 1.f;
-        
-    }else{
-        if (_imageScroll.tracking) {
-            return;
-        }
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            @WeakObj(_numLabel);
-            [UIView animateWithDuration:3.f animations:^{
-                Weak_numLabel.alpha = 0.f;
-            }];
-        });
-    }
+//    if (show) {
+//        
+//        _numLabel.alpha = 1.f;
+//        
+//    }else{
+//        if (_imageScroll.tracking) {
+//            return;
+//        }
+//        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//            @WeakObj(_numLabel);
+//            [UIView animateWithDuration:3.f animations:^{
+//                Weak_numLabel.alpha = 0.f;
+//            }];
+//        });
+//    }
 }
 
 #pragma mark - configScrollView
@@ -531,6 +562,7 @@
     }
     
     _numLabel.text = [NSString stringWithFormat:@"%d / %d",(int)_pageIndex + 1,(int)_sumPage];
+    [_numBtn setTitle:[NSString stringWithFormat:@"  %d / %d",(int)_pageIndex + 1,(int)_sumPage] forState:UIControlStateNormal];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
